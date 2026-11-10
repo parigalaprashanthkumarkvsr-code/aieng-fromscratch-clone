@@ -1,0 +1,75 @@
+{
+  "captured_at": "2026-11-10",
+  "tool": "REA 6.8.0 browser scenario capture (Chromium 155, Playwright driver)",
+  "target": "http://127.0.0.1:8765/",
+  "viewport": { "width": 1440, "height": 1200, "device_scale_factor": 1 },
+  "pixel_parity": {
+    "status": "pass",
+    "method": "Headless Chromium screenshots at 1440x1200 with --force-prefers-reduced-motion; ImageMagick compare -metric AE",
+    "original_sha256": "f2835500c0aed04197001d511febb77a9acaeb1bc61ac5142b75ef9b76ea5344",
+    "clone_sha256": "f2835500c0aed04197001d511febb77a9acaeb1bc61ac5142b75ef9b76ea5344",
+    "different_pixels": 0
+  },
+  "checks": [
+    {
+      "name": "mobile navigation",
+      "status": "pass",
+      "evidence": ["clone-menu.png", "clone-mobile-menu.png"],
+      "observed": "The header menu opens with aria-expanded=true and exposes the overflow links plus theme, language, and TTS tools. At 390x844 all links are reachable in a scrollable 44px-target panel."
+    },
+    {
+      "name": "theme menu",
+      "status": "pass",
+      "evidence": ["clone-theme-menu.png", "clone-dark.png"],
+      "observed": "The menu opens with role=menu; selecting Dark sets <html data-theme=\"dark\"> and writes localStorage.theme=dark. The dark token set renders across the page."
+    },
+    {
+      "name": "figure carousel",
+      "status": "pass",
+      "evidence": ["clone-dark.png"],
+      "observed": "Clicking .fig-next changes the caption to \"Plate 2 of 3. The first AI-native course: your agent teaches it, quizzes you, and tracks your path.\" and swaps the active SVG plate. Autoplay, dots, and reduced-motion pausing remain wired."
+    },
+    {
+      "name": "ask the machine",
+      "status": "pass",
+      "evidence": ["clone-ask.png"],
+      "observed": "Clicking the trigger sets data-state=answered, data-check=1, and renders the reply \"Define ‘here’.\" with hint \"In the meantime, build something.\" The label changes to Ask again."
+    },
+    {
+      "name": "phase modal",
+      "status": "pass",
+      "evidence": ["clone-modal.png"],
+      "observed": "Clicking Phase 00 opens #modalOverlay.open with title \"Setup & Tooling\", 13 lessons, a search field, per-lesson mark-done buttons, and a reset control. Escape/overlay/close and focus trapping are present."
+    },
+    {
+      "name": "copy button",
+      "status": "pass",
+      "evidence": ["clone-ask.png"],
+      "observed": "Clicking #installCopy changes #installCopyLabel to \"copied\" and sets the copied class; the state reverts after 1.5 seconds. Clipboard API failure falls back to execCommand."
+    },
+    {
+      "name": "command palette",
+      "status": "pass",
+      "evidence": ["clone-palette.png"],
+      "observed": "Opening from .search-toggle produces #cmdPalette.cp-open with aria-hidden=false, a focused combobox (#cpInput), a listbox (#cpResults), and the summary \"Search 542 lessons, 13 focused learning paths, 526 outputs, and 250 glossary terms.\" Cmd/Ctrl+K is also bound."
+    }
+  ],
+  "storage_after_scenario": [
+    "aifs:star-nudge",
+    "theme",
+    "gh:stars:rohitg00/ai-engineering-from-scratch"
+  ],
+  "console": [
+    {
+      "level": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "expected": true,
+      "cause": "The command palette imports /pagefind/pagefind.js on focus. Pagefind output is not included in the landing-only clone. The in-memory lesson/phase/path/glossary search still works."
+    }
+  ],
+  "notes": [
+    "The clone was served with python3 -m http.server 8765 --bind 127.0.0.1.",
+    "The original screenshot was captured from https://aiengineeringfromscratch.com/ on 2026-11-10 with the same viewport and reduced-motion flag.",
+    "Animation-heavy figure plates can pause at arbitrary frames in headless Chromium because hover/pointer capabilities differ; reduced motion makes the comparison deterministic."
+  ]
+}
